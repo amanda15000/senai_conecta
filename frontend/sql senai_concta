@@ -1,0 +1,88 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema senai_conecta
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema senai_conecta
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS senai_conecta DEFAULT CHARACTER SET utf8 ;
+USE senai_conecta ;
+
+-- -----------------------------------------------------
+-- Table senai_conecta.usuario
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS senai_conecta.usuario (
+  id_usuario INT NOT NULL AUTO_INCREMENT,
+  nome_usuario VARCHAR(145) NOT NULL,
+  username_usuario VARCHAR(45) NOT NULL,
+  email_usuario VARCHAR(115) NOT NULL,
+  senha_usuario VARCHAR(45) NOT NULL,
+  foto_usuario VARCHAR(45) NOT NULL,
+  tipo_perfil_usuario ENUM('usuario', 'criador') NOT NULL,
+  criado_em_usuario DATETIME NOT NULL,
+  atualizado_em_usuario VARCHAR(45) NOT NULL,
+  PRIMARY KEY (id_usuario),
+  UNIQUE INDEX email_senha_UNIQUE (email_usuario ASC) ,
+  UNIQUE INDEX senha_UNIQUE (senha_usuario ASC) )
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table senai_conecta.publicacao
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS senai_conecta.publicacao (
+  id_publicacao INT NOT NULL AUTO_INCREMENT,
+  texto_publicacao TEXT(200) NOT NULL,
+  imagem_publicacao VARCHAR(45) NULL,
+  datahora_publicacao DATETIME NOT NULL,
+  usuario_id_usuario INT NOT NULL,
+  PRIMARY KEY (id_publicacao),
+  INDEX fk_publicacao_usuario_idx (usuario_id_usuario ASC) ,
+  CONSTRAINT fk_publicacao_usuario
+    FOREIGN KEY (usuario_id_usuario)
+    REFERENCES senai_conecta.usuario (id_usuario)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table senai_conecta.``
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS senai_conecta.`` (
+)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table senai_conecta.curtida
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS senai_conecta.curtida (
+  usuario_id_usuario INT NOT NULL,
+  publicacao_id_publicacao INT NOT NULL,
+  datahora_curtidas DATETIME NOT NULL,
+  PRIMARY KEY (usuario_id_usuario, publicacao_id_publicacao),
+  INDEX fk_usuario_has_publicacao_publicacao1_idx (publicacao_id_publicacao ASC) ,
+  INDEX fk_usuario_has_publicacao_usuario1_idx (usuario_id_usuario ASC) ,
+  CONSTRAINT fk_usuario_has_publicacao_usuario1
+    FOREIGN KEY (usuario_id_usuario)
+    REFERENCES senai_conecta.usuario (id_usuario)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT fk_usuario_has_publicacao_publicacao1
+    FOREIGN KEY (publicacao_id_publicacao)
+    REFERENCES senai_conecta.publicacao (id_publicacao)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
